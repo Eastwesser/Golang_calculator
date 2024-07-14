@@ -23,4 +23,18 @@ func MainCalc() {
 
 	fmt.Println("Result:")
 	fmt.Println(numberA, numberB)
+
+	//sum := 1
+	//for i := 5; i <= 8; i++ {
+	//	sum += i
+	//}
+	//fmt.Println(sum)
+}
+
+func add(x int, y int) int {
+	return x + y
+}
+
+func main() {
+	fmt.Println(add(42, 13))
 }
