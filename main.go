@@ -7,6 +7,6 @@ import (
 
 func main() {
 	calculator.MainCalc()
-	var phrase string = "Golang Calculator"
+	var phrase = "Golang Calculator"
 	fmt.Println(phrase)
 }
