@@ -1,3 +1,3 @@
-module Golang_calculator
+module GolangCalculator
 
 go 1.22
