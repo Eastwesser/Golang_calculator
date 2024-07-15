@@ -1,6 +1,8 @@
 package calculator
 
-import "fmt"
+import (
+	"fmt"
+)
 
 /*
 Per meliora
@@ -10,31 +12,48 @@ et altiora!
 
 func MainCalc() {
 	fmt.Println("Enter first number: ")
-	var numberA int
-	fmt.Scanln(&numberA)
+	var number1 int
+	fmt.Scanln(&number1)
 
 	fmt.Println("Enter second number: ")
-	var numberB int
-	fmt.Scanln(&numberB)
+	var number2 int
+	fmt.Scanln(&number2)
 
-	if numberA < numberB {
-		numberA, numberB = numberB, numberA
+	fmt.Println("Choose your math option:")
+	fmt.Println("A. Sum")
+	fmt.Println("B. Subtraction")
+	fmt.Println("C. Multiplication")
+	fmt.Println("D. Division")
+
+	var choice string
+	fmt.Scanln(&choice)
+
+	switch choice {
+	case "A":
+		fmt.Println("Result:", add(number1, number2))
+	case "B":
+		fmt.Println("Result:", subtract(number1, number2))
+	case "C":
+		fmt.Println("Result:", multiply(number1, number2))
+	case "D":
+		fmt.Println("Result:", divide(number1, number2))
+	default:
+		fmt.Println("Unrecognized choice")
 	}
-
-	fmt.Println("Result:")
-	fmt.Println(numberA, numberB)
-
-	//sum := 1
-	//for i := 5; i <= 8; i++ {
-	//	sum += i
-	//}
-	//fmt.Println(sum)
 }
 
 func add(x int, y int) int {
 	return x + y
 }
 
-func main() {
-	fmt.Println(add(42, 13))
+func subtract(x int, y int) int {
+	return x - y
+}
+
+func multiply(x int, y int) int {
+	return x * y
+}
+
+func divide(x int, y int) int {
+	return x / y
 }

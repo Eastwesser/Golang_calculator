@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
+	var phrase = "Thank you for using our Golang Calculator! ^w^"
 	calculator.MainCalc()
-	var phrase = "Golang Calculator"
 	fmt.Println(phrase)
 }
