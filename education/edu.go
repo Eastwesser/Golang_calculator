@@ -182,4 +182,93 @@ for i := 1; i <= 9; i++{
 3
 4
 
+
+package main
+
+import "fmt"
+
+func main() {
+    var a, b, c int
+
+    // fmt.Println("Ввод значений a, b, c:")
+    fmt.Scanln(&a, &b, &c)
+
+    // Вывод суммы и произведения
+    fmt.Println(a + b + c)
+    fmt.Println(a * b * c)
+}
+
+
+==========================
+BOT 5 - FIVE
+
+package main
+
+import "fmt"
+
+func main() {
+    var a int
+    for i := 0; i < 3; i++ {
+        // Считываем число с клавиатуры
+        fmt.Scanln(&a)
+        // Выводим число на русском языке
+        switch a {
+        case 0:
+            fmt.Println("Ноль")
+        case 1:
+            fmt.Println("Один")
+        case 2:
+            fmt.Println("Два")
+        case 3:
+            fmt.Println("Три")
+        case 4:
+            fmt.Println("Четыре")
+        case 5:
+            fmt.Println("Пять")
+        case 6:
+            fmt.Println("Шесть")
+        case 7:
+            fmt.Println("Семь")
+        case 8:
+            fmt.Println("Восемь")
+        case 9:
+            fmt.Println("Девять")
+        case 10:
+            fmt.Println("Десять")
+        }
+    }
+}
+
+OR PERHAPS:
+
+package main
+
+import "fmt"
+
+func main() {
+    var firstNumber, secondNumber, thirdNumber int
+
+    fmt.Scan(&firstNumber)
+    fmt.Scan(&secondNumber)
+    fmt.Scan(&thirdNumber)
+
+    numbers := map[int]string{
+        0: "Ноль",
+        1: "Один",
+        2: "Два",
+        3: "Три",
+        4: "Четыре",
+        5: "Пять",
+        6: "Шесть",
+        7: "Семь",
+        8: "Восемь",
+        9: "Девять",
+        10: "Десять",
+    }
+
+    fmt.Println(numbers[firstNumber])
+    fmt.Println(numbers[secondNumber])
+    fmt.Println(numbers[thirdNumber])
+}
+
 */
