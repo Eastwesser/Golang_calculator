@@ -37,7 +37,7 @@ func MainCalc() {
 		fmt.Println("Result:", multiply(number1, number2))
 	case "D":
 		if number2 == 0 {
-			fmt.Println("DIVISION BY ZERO")
+			fmt.Println("Error: DIVISION BY ZERO")
 			break
 		} else {
 			fmt.Println("Result:", divide(number1, number2))
