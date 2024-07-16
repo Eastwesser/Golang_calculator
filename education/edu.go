@@ -347,5 +347,33 @@ func main() {
 }
 
 ========================================
+CONCAT + RETURN
+
+package main
+
+import "fmt"
+
+func concat(x, y string) string {
+    return x + y
+}
+
+func main() {
+    var stroka1, stroka2 string
+    fmt.Scan(&stroka1)
+    fmt.Scan(&stroka2)
+    fmt.Println(concat(stroka1, stroka2))
+}
+========================================
+func plusMinus(x, y int) (int, int) {
+    return x + y, x - y
+}
+
+a, b := plusMinus(15, 5)
+
+Вывод двух строк рядом (как ФИО)
+func myStr(x, y string) (string, string) {
+    return x, y
+}
+========================================
 
 */
