@@ -313,11 +313,39 @@ func main() {
 ========================================
 array
 
-
 var a [5]int
 a := [5]int{0, 2, 4, 6, 8}
 
 var countries[3]string
+
+var a [5]int
+
+a[0] = 8
+a[1] = 42
+
+fmt.Println(a[1]) // выведет 42
+
+
+arr := [5]int{0, 2, 4, 6, 8}
+
+fmt.Println(arr[2]) // выведет третий элемент массива
+
+========================================
+RETURN
+
+package main
+
+import "fmt"
+
+func square(num int) int {
+    return num * num
+}
+
+func main() {
+    res := square(4)
+    fmt.Println(res) // выведет: 16
+}
+
 ========================================
 
 */
