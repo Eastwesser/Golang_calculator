@@ -375,5 +375,36 @@ func myStr(x, y string) (string, string) {
     return x, y
 }
 ========================================
+defer часто используется для очистки,
+например, для освобождения ресурсов,
+используемых кодом, таких как файлы, соединения и т.д.
+
+package main
+
+import "fmt"
+
+func welcome() {
+    fmt.Println("Добро пожаловать")
+}
+
+func main() {
+    defer welcome()
+    fmt.Println("Привет!")
+}
+
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("начало")
+
+    for i := 0; i < 5; i++ {
+        defer fmt.Println(i)
+    }
+    fmt.Println("конец")
+}
+// сначала выполняется defer fmt.Println(i), а затем i++
+
 
 */
