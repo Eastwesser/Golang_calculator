@@ -287,7 +287,37 @@ func main() {
 	fmt.Println(a, b)
 }
 ========================================
+package main
 
+import "fmt"
+
+func sample(number int){
+    fmt.Print(number) // parameter
+}
+
+func main(){
+    var x = 12
+    sample(x) // argument
+}
+========================================
+func mult(a, b int) {
+    res := a * b
+    fmt.Println(res) // show multiplication of 2 nums
+}
+
+func main() {
+    var a, b int
+    fmt.Scan(&a, &b)
+    mult(a, b)
+}
+========================================
+array
+
+
+var a [5]int
+a := [5]int{0, 2, 4, 6, 8}
+
+var countries[3]string
 ========================================
 
 */
