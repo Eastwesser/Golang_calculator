@@ -62,3 +62,13 @@ func multiply(x int, y int) int {
 func divide(x int, y int) int {
 	return x / y
 }
+
+//func divideByZero(x int, y int) int {
+//	defer func() {
+//		if r := recover(); r != nil {
+//			fmt.Println("Error: DIVISION BY ZERO")
+//		}
+//	}()
+//
+//	return x / y
+//}
