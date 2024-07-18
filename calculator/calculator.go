@@ -1,6 +1,7 @@
 package calculator
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -35,13 +36,16 @@ func MainCalc() {
 		fmt.Println("Result:", subtract(number1, number2))
 	case "C":
 		fmt.Println("Result:", multiply(number1, number2))
+
 	case "D":
-		if number2 == 0 {
-			fmt.Println("Error: DIVISION BY ZERO")
+		res, err := divide(number1, number2)
+		if err != nil { // check for error
+			fmt.Println("Error:", err)
 			break
 		} else {
-			fmt.Println("Result:", divide(number1, number2))
+			fmt.Println("Result:", res)
 		}
+
 	default:
 		fmt.Println("Unrecognized choice")
 	}
@@ -59,16 +63,9 @@ func multiply(x int, y int) int {
 	return x * y
 }
 
-func divide(x int, y int) int {
-	return x / y
+func divide(x int, y int) (int, error) {
+	if y == 0 {
+		return 0, errors.New("Division by zero")
+	}
+	return x / y, nil
 }
-
-//func divideByZero(x int, y int) int {
-//	defer func() {
-//		if r := recover(); r != nil {
-//			fmt.Println("Error: DIVISION BY ZERO")
-//		}
-//	}()
-//
-//	return x / y
-//}
