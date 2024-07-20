@@ -5,6 +5,21 @@ import (
 	"strings"
 )
 
+var romanValues := []struct {
+	Value  int
+	Symbol string
+}{
+	{100, "C"},
+	{90, "XC"},
+	{50, "L"},
+	{40, "XL"},
+	{10, "X"},
+	{9, "IX"},
+	{5, "V"},
+	{4, "IV"},
+	{1, "I"},
+}
+
 // Словарь для хранения значений римских чисел
 var romanNumerals = map[string]int{
 	"I": 1, "IV": 4, "V": 5, "IX": 9, "X": 10,
@@ -38,25 +53,6 @@ func RomanToArabic(num string) (int, error) {
 // ArabicToRoman преобразует арабское число в его римский эквивалент
 func ArabicToRoman(num int) string {
 	var result strings.Builder
-
-	romanValues := []struct {
-		Value  int
-		Symbol string
-	}{
-		{1000, "M"},
-		{900, "CM"},
-		{500, "D"},
-		{400, "CD"},
-		{100, "C"},
-		{90, "XC"},
-		{50, "L"},
-		{40, "XL"},
-		{10, "X"},
-		{9, "IX"},
-		{5, "V"},
-		{4, "IV"},
-		{1, "I"},
-	}
 
 	// Перебираем римские значения и добавляем их к результату
 	for _, rv := range romanValues {
