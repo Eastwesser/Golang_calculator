@@ -28,6 +28,7 @@ func CalculateExpression(input string) (string, error) {
 	// Проверяем, являются ли оба операнда римскими числами
 	isRoman1 := romanRegex.MatchString(number1)
 	isRoman2 := romanRegex.MatchString(number2)
+	isRoman := isRoman1 && isRoman2
 
 	// Проверяем, чтобы оба числа были в одной системе счисления
 	if isRoman1 != isRoman2 {
@@ -38,7 +39,7 @@ func CalculateExpression(input string) (string, error) {
 	var err error
 
 	// Если числа римские, конвертируем их в арабские
-	if isRoman1 {
+	if isRoman {
 		num1, err = roman.RomanToArabic(number1)
 		if err != nil {
 			panic(err)
@@ -71,15 +72,15 @@ func CalculateExpression(input string) (string, error) {
 	}
 
 	// Если числа были римскими, конвертируем результат обратно в римские
-	if isRoman1 {
+	if isRoman {
 		if result < 1 {
 			panic("в римской системе нет отрицательных чисел")
 		}
-		return roman.ArabicToRoman(result)
+		return roman.ArabicToRoman(result), nil
 	}
 
 	// Возвращаем результат для арабских чисел
-	return strconv.Itoa(result)
+	return strconv.Itoa(result), nil
 }
 
 // calculate выполняет указанную арифметическую операцию над двумя целыми числами
