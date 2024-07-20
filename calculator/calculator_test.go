@@ -5,30 +5,78 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	result := add(1, 2)
-	if result != 3 {
-		t.Errorf("Expected 3, got %d", result)
+	tests := []struct {
+		x, y, expected int
+	}{
+		{1, 2, 3},
+		{10, 10, 20},
+		{5, 5, 10},
+		{0, 0, 0},
+		{-1, -2, -3},
+	}
+
+	for _, test := range tests {
+		result := add(test.x, test.y)
+		if result != test.expected {
+			t.Errorf("Expected %d, got %d", test.expected, result)
+		}
 	}
 }
 
 func TestSubtract(t *testing.T) {
-	result := subtract(2, 1)
-	if result != 1 {
-		t.Errorf("Expected 1, got %d", result)
+	tests := []struct {
+		x, y, expected int
+	}{
+		{2, 1, 1},
+		{10, 5, 5},
+		{5, 5, 0},
+		{0, 0, 0},
+		{0, 1, -1},
+	}
+
+	for _, test := range tests {
+		result := subtract(test.x, test.y)
+		if result != test.expected {
+			t.Errorf("Expected %d, got %d", test.expected, result)
+		}
 	}
 }
 
 func TestMultiply(t *testing.T) {
-	result := multiply(2, 3)
-	if result != 6 {
-		t.Errorf("Expected 6, got %d", result)
+	tests := []struct {
+		x, y, expected int
+	}{
+		{2, 3, 6},
+		{10, 10, 100},
+		{5, 0, 0},
+		{0, 5, 0},
+		{-1, -1, 1},
+	}
+
+	for _, test := range tests {
+		result := multiply(test.x, test.y)
+		if result != test.expected {
+			t.Errorf("Expected %d, got %d", test.expected, result)
+		}
 	}
 }
 
 func TestDivide(t *testing.T) {
-	result := divide(6, 2)
-	if result != 3 {
-		t.Errorf("Expected 3, got %d", result)
+	tests := []struct {
+		x, y, expected int
+	}{
+		{6, 2, 3},
+		{10, 5, 2},
+		{5, 2, 2},
+		{0, 1, 0},
+		{-10, -2, 5},
+	}
+
+	for _, test := range tests {
+		result := divide(test.x, test.y)
+		if result != test.expected {
+			t.Errorf("Expected %d, got %d", test.expected, result)
+		}
 	}
 }
 
