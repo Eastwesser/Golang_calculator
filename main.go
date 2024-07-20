@@ -6,7 +6,11 @@ import (
 )
 
 func main() {
-	var phrase = "Thank you for using our Golang Calculator! ^w^"
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Panic:", r)
+		}
+	}()
 	calculator.MainCalc()
-	fmt.Println(phrase)
+	fmt.Println("Thank you for using our Golang Calculator! ^w^")
 }
