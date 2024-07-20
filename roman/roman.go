@@ -1,6 +1,7 @@
 package roman
 
 import (
+	"errors"
 	"strings"
 )
 
@@ -11,41 +12,18 @@ var romanNumerals = map[string]int{
 	"CD": 400, "D": 500, "CM": 900, "M": 1000,
 }
 
-// RomanToNumeral проверяет, является ли строка допустимым римским числом
-func RomanToNumeral(num string) bool {
-	if num == "" {
-		return false
-	}
-
-	for i := 0; i < len(num); {
-		valid := false
-		for length := 1; length <= 2; length++ {
-			if i+length <= len(num) {
-				if _, exists := romanNumerals[num[i:i+length]]; exists {
-					valid = true
-					i += length
-					break
-				}
-			}
-		}
-		if !valid {
-			return false
-		}
-	}
-	return true
-}
-
 // RomanToArabic преобразует римское число в его арабский эквивалент
-func RomanToArabic(num string) (int, bool) {
-	if !RomanToNumeral(num) {
-		return 0, true
-	}
-
+func RomanToArabic(num string) (int, error) {
+	num = strings.ToUpper(num) // Преобразуем строку в верхний регистр
 	total := 0
 	prevValue := 0
 
+	// Перебираем строку с конца, добавляем или вычитаем значение в зависимости от положения символа
 	for i := len(num) - 1; i >= 0; i-- {
-		value := romanNumerals[string(num[i])]
+		value, exists := romanNumerals[string(num[i])]
+		if !exists {
+			return 0, errors.New("недопустимое римское число")
+		}
 		if value < prevValue {
 			total -= value
 		} else {
@@ -54,7 +32,7 @@ func RomanToArabic(num string) (int, bool) {
 		prevValue = value
 	}
 
-	return total, true
+	return total, nil
 }
 
 // ArabicToRoman преобразует арабское число в его римский эквивалент
@@ -80,6 +58,7 @@ func ArabicToRoman(num int) string {
 		{1, "I"},
 	}
 
+	// Перебираем римские значения и добавляем их к результату
 	for _, rv := range romanValues {
 		for num >= rv.Value {
 			result.WriteString(rv.Symbol)

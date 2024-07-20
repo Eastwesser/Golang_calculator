@@ -1,106 +1,105 @@
 package calculator
 
 import (
-	"GolangCalculator/roman"
 	"errors"
-	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
+
+	"GolangCalculator/roman"
 )
 
-// MainCalc обрабатывает основную логику калькулятора и взаимодействие с пользователем
-func MainCalc() {
-	for {
-		var number1, number2, operator string
+// Регулярное выражение для проверки римских чисел
+var romanRegex = regexp.MustCompile(`^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$`)
 
-		fmt.Println("Введите первое число (или введите 'exit' для выхода):")
-		fmt.Scanln(&number1)
-		number1 = strings.TrimSpace(number1)
-		if strings.ToLower(number1) == "exit" {
-			break
-		}
+// CalculateExpression вычисляет выражение, заданное в строковом формате
+func CalculateExpression(input string) (string, error) {
+	// Разделяем строку на компоненты
+	tokens := strings.Fields(input)
 
-		fmt.Println("Введите второе число:")
-		fmt.Scanln(&number2)
-		number2 = strings.TrimSpace(number2)
+	// Отладочная информация
+	if len(tokens) != 3 {
+		return "", errors.New("формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *)")
+	}
 
-		fmt.Println("Введите операцию (+, -, *, /):")
-		fmt.Scanln(&operator)
-		operator = strings.TrimSpace(operator)
+	// Получаем первый операнд, оператор и второй операнд
+	number1, operator, number2 := tokens[0], tokens[1], tokens[2]
 
-		isRoman := roman.RomanToNumeral(number1)
-		var num1, num2 int
+	// Отладочная информация
+	// fmt.Printf("number1: %s, operator: %s, number2: %s\n", number1, operator, number2)
 
-		if isRoman {
-			if !roman.RomanToNumeral(number2) {
-				fmt.Println("Ошибка: оба числа должны быть римскими или арабскими числами")
-				continue
-			}
-			num1, _ = roman.RomanToArabic(number1)
-			num2, _ = roman.RomanToArabic(number2)
-		} else {
-			var err1, err2 error
-			num1, err1 = strconv.Atoi(number1)
-			num2, err2 = strconv.Atoi(number2)
-			if err1 != nil || err2 != nil {
-				fmt.Println("Ошибка: оба числа должны быть допустимыми целыми числами")
-				continue
-			}
-		}
+	// Проверяем, являются ли оба операнда римскими числами
+	isRoman1 := romanRegex.MatchString(number1)
+	isRoman2 := romanRegex.MatchString(number2)
 
-		result, err := calculate(num1, num2, operator)
+	// Проверяем, чтобы оба числа были в одной системе счисления
+	if isRoman1 != isRoman2 {
+		return "", errors.New("используются одновременно разные системы счисления")
+	}
+
+	var num1, num2 int
+	var err error
+
+	// Если числа римские, конвертируем их в арабские
+	if isRoman1 {
+		num1, err = roman.RomanToArabic(number1)
 		if err != nil {
-			fmt.Println("Ошибка:", err)
-			continue
+			return "", err
 		}
-
-		if isRoman {
-			if result < 1 {
-				fmt.Println("Ошибка: Результат в римских числах меньше I")
-				continue
-			}
-			fmt.Println("Результат:", roman.ArabicToRoman(result))
-		} else {
-			fmt.Println("Результат:", result)
+		num2, err = roman.RomanToArabic(number2)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		// Если числа арабские, конвертируем их в целые числа
+		num1, err = strconv.Atoi(number1)
+		if err != nil {
+			return "", err
+		}
+		num2, err = strconv.Atoi(number2)
+		if err != nil {
+			return "", err
 		}
 	}
+
+	// Проверяем, чтобы числа были в диапазоне от 1 до 10
+	if num1 < 1 || num1 > 10 || num2 < 1 || num2 > 10 {
+		return "", errors.New("числа должны быть от 1 до 10 включительно")
+	}
+
+	// Выполняем вычисление
+	result, err := calculate(num1, num2, operator)
+	if err != nil {
+		return "", err
+	}
+
+	// Если числа были римскими, конвертируем результат обратно в римские
+	if isRoman1 {
+		if result < 1 {
+			return "", errors.New("в римской системе нет отрицательных чисел")
+		}
+		return roman.ArabicToRoman(result), nil
+	}
+
+	// Возвращаем результат для арабских чисел
+	return strconv.Itoa(result), nil
 }
 
 // calculate выполняет указанную арифметическую операцию над двумя целыми числами
 func calculate(x int, y int, operator string) (int, error) {
 	switch operator {
 	case "+":
-		return add(x, y), nil
+		return x + y, nil
 	case "-":
-		return subtract(x, y), nil
+		return x - y, nil
 	case "*":
-		return multiply(x, y), nil
+		return x * y, nil
 	case "/":
 		if y == 0 {
 			return 0, errors.New("деление на ноль")
 		}
-		return divide(x, y), nil
+		return x / y, nil
 	default:
 		return 0, errors.New("неизвестный оператор")
 	}
-}
-
-// add возвращает сумму x и y
-func add(x int, y int) int {
-	return x + y
-}
-
-// subtract возвращает разность между x и y
-func subtract(x int, y int) int {
-	return x - y
-}
-
-// multiply возвращает произведение x и y
-func multiply(x int, y int) int {
-	return x * y
-}
-
-// divide возвращает частное от деления x на y
-func divide(x int, y int) int {
-	return x / y
 }

@@ -4,30 +4,6 @@ import (
 	"testing"
 )
 
-// TestRomanToNumeral тестирует функцию RomanToNumeral, чтобы проверить, является ли строка допустимым римским числом
-func TestRomanToNumeral(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected bool
-	}{
-		{"X", true},
-		{"A", false},
-		{"IV", true},
-		{"", false},
-		{"XIII", true},
-		{"INVALID", false},
-		{"XLII", true},
-		{"MCMXCIV", true},
-	}
-
-	for _, test := range tests {
-		result := RomanToNumeral(test.input)
-		if result != test.expected {
-			t.Errorf("RomanToNumeral(%q) = %v; want %v", test.input, result, test.expected)
-		}
-	}
-}
-
 // TestRomanToArabic тестирует функцию RomanToArabic, чтобы преобразовать римские числа в арабские числа
 func TestRomanToArabic(t *testing.T) {
 	tests := []struct {
@@ -42,13 +18,12 @@ func TestRomanToArabic(t *testing.T) {
 		{"XX", 20},
 		{"XLII", 42},
 		{"MCMXCIV", 1994},
-		{"INVALID", 0}, // Предполагается, что INVALID возвращает 0
 	}
 
 	for _, test := range tests {
-		result, ok := RomanToArabic(test.input)
-		if !ok || result != test.expected {
-			t.Errorf("RomanToArabic(%q) = %d, %v; want %d, true", test.input, result, ok, test.expected)
+		result, err := RomanToArabic(test.input)
+		if err != nil || result != test.expected {
+			t.Errorf("RomanToArabic(%q) = %d, %v; want %d, nil", test.input, result, err, test.expected)
 		}
 	}
 }
