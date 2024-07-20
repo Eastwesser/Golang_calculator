@@ -93,7 +93,7 @@ func TestDivide(t *testing.T) {
 	}
 }
 
-// TestDivideByZero проверяет, что деление на ноль вызывает панику
+// TestDivideByZero проверяет, что деление на ноль вызывает panic
 func TestDivideByZero(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
