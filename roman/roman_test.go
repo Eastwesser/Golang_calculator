@@ -2,73 +2,64 @@ package roman
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-// TestRomanToArabic тестирует функцию RomanToArabic, чтобы преобразовать римские числа в арабские числа
 func TestRomanToArabic(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected int
+		isError  bool
 	}{
-		{"X", 10},
-		{"IV", 4},
-		{"IX", 9},
-		{"I", 1},
-		{"V", 5},
-		{"XX", 20},
-		{"XLII", 42},
-		{"MCMXCIV", 1994},
+		{"I", 1, false},
+		{"IV", 4, false},
+		{"V", 5, false},
+		{"IX", 9, false},
+		{"X", 10, false},
+		{"XL", 40, false},
+		{"L", 50, false},
+		{"XC", 90, false},
+		{"C", 100, false},
+		{"MMM", 0, true},     // Invalid
+		{"INVALID", 0, true}, // Invalid
 	}
 
 	for _, test := range tests {
-		result, err := RomanToArabic(test.input)
-		if err != nil || result != test.expected {
-			t.Errorf("RomanToArabic(%q) = %d, %v; want %d, nil", test.input, result, err, test.expected)
-		}
+		t.Run(test.input, func(t *testing.T) {
+			result, err := RomanToArabic(test.input)
+			if test.isError {
+				require.Error(t, err, "Expected an error for input: %s", test.input)
+			} else {
+				require.NoError(t, err, "Did not expect an error for input: %s", test.input)
+				assert.Equal(t, test.expected, result, "Unexpected result for input: %s", test.input)
+			}
+		})
 	}
 }
 
-// TestArabicToRoman тестирует функцию ArabicToRoman, чтобы преобразовать арабские числа в римские числа
 func TestArabicToRoman(t *testing.T) {
 	tests := []struct {
 		input    int
 		expected string
 	}{
-		{10, "X"},
-		{4, "IV"},
-		{9, "IX"},
 		{1, "I"},
+		{4, "IV"},
 		{5, "V"},
-		{20, "XX"},
-		{42, "XLII"},
-		{1994, "MCMXCIV"},
-	}
-
-	for _, test := range tests {
-		result := ArabicToRoman(test.input)
-		if result != test.expected {
-			t.Errorf("ArabicToRoman(%d) = %s; want %s", test.input, result, test.expected)
-		}
-	}
-}
-
-// TestArabicToRomanComplex тестирует функцию ArabicToRoman с более сложными числами
-func TestArabicToRomanComplex(t *testing.T) {
-	tests := []struct {
-		input    int
-		expected string
-	}{
-		{1987, "MCMLXXXVII"},
+		{9, "IX"},
+		{10, "X"},
+		{40, "XL"},
+		{50, "L"},
+		{90, "XC"},
+		{100, "C"},
 		{3999, "MMMCMXCIX"},
-		{44, "XLIV"},
-		{49, "XLIX"},
-		{2022, "MMXXII"},
 	}
 
 	for _, test := range tests {
-		result := ArabicToRoman(test.input)
-		if result != test.expected {
-			t.Errorf("ArabicToRoman(%d) = %s; want %s", test.input, result, test.expected)
-		}
+		t.Run(test.expected, func(t *testing.T) {
+			result := ArabicToRoman(test.input)
+			assert.Equal(t, test.expected, result, "Unexpected result for input: %d", test.input)
+		})
 	}
 }

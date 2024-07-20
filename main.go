@@ -33,7 +33,11 @@ func main() {
 		}
 
 		// Вызываем функцию для вычисления выражения и обрабатываем возможные ошибки
-		result := calculator.CalculateExpression(input)
+		result, err := calculator.CalculateExpression(input)
+		if err != nil {
+			fmt.Println("Ошибка:", err)
+			continue
+		}
 		fmt.Println(result)
 	}
 	fmt.Println("Благодарим за использование нашего калькулятора! ^w^")
