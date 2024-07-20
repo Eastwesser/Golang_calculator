@@ -16,19 +16,25 @@ func MainCalc() {
 
 	number1, number2, operator, err := parseInput(input)
 	if err != nil {
-		fmt.Println("Error:", err)
-		return
+		panic(err)
 	}
 
 	isRoman := roman.IsRomanNumeral(number1)
-	var num1, num2 int
+	if isRoman != roman.IsRomanNumeral(number2) {
+		panic("different numeral systems used")
+	}
 
+	var num1, num2 int
 	if isRoman {
 		num1 = roman.RomanToArabic(number1)
 		num2 = roman.RomanToArabic(number2)
 	} else {
 		num1, _ = strconv.Atoi(number1)
 		num2, _ = strconv.Atoi(number2)
+	}
+
+	if num1 < 1 || num1 > 10 || num2 < 1 || num2 > 10 {
+		panic("numbers must be between 1 and 10")
 	}
 
 	var wg sync.WaitGroup
@@ -44,23 +50,18 @@ func MainCalc() {
 		close(errorChan)
 	}()
 
-	for {
-		select {
-		case result := <-resultChan:
-			if isRoman {
-				if result < 1 {
-					fmt.Println("Error: Result in Roman numerals is less than I")
-					return
-				}
-				fmt.Println("Result:", roman.ArabicToRoman(result))
-			} else {
-				fmt.Println("Result:", result)
+	select {
+	case result := <-resultChan:
+		if isRoman {
+			if result < 1 {
+				panic("Result in Roman numerals is less than I")
 			}
-			return
-		case err := <-errorChan:
-			fmt.Println("Error:", err)
-			return
+			fmt.Println("Result:", roman.ArabicToRoman(result))
+		} else {
+			fmt.Println("Result:", result)
 		}
+	case err := <-errorChan:
+		panic(err)
 	}
 }
 
