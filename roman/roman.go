@@ -4,27 +4,60 @@ import (
 	"strings"
 )
 
-// Словарь для хранения значений римских чисел до 3999 (или выше, если нужно)
+// Словарь для хранения значений римских чисел
 var romanNumerals = map[string]int{
-	"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5,
-	"VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10,
+	"I": 1, "IV": 4, "V": 5, "IX": 9, "X": 10,
 	"XL": 40, "L": 50, "XC": 90, "C": 100,
 	"CD": 400, "D": 500, "CM": 900, "M": 1000,
 }
 
 // RomanToNumeral проверяет, является ли строка допустимым римским числом
 func RomanToNumeral(num string) bool {
-	_, exists := romanNumerals[num]
-	return exists
+	if num == "" {
+		return false
+	}
+
+	for i := 0; i < len(num); {
+		valid := false
+		for length := 1; length <= 2; length++ {
+			if i+length <= len(num) {
+				if _, exists := romanNumerals[num[i:i+length]]; exists {
+					valid = true
+					i += length
+					break
+				}
+			}
+		}
+		if !valid {
+			return false
+		}
+	}
+	return true
 }
 
-// RomanToArabic преобразует римское число в его арабское эквивалент
+// RomanToArabic преобразует римское число в его арабский эквивалент
 func RomanToArabic(num string) (int, bool) {
-	value, exists := romanNumerals[num]
-	return value, exists
+	if !RomanToNumeral(num) {
+		return 0, true
+	}
+
+	total := 0
+	prevValue := 0
+
+	for i := len(num) - 1; i >= 0; i-- {
+		value := romanNumerals[string(num[i])]
+		if value < prevValue {
+			total -= value
+		} else {
+			total += value
+		}
+		prevValue = value
+	}
+
+	return total, true
 }
 
-// ArabicToRoman преобразует арабское число в его римское эквивалент
+// ArabicToRoman преобразует арабское число в его римский эквивалент
 func ArabicToRoman(num int) string {
 	var result strings.Builder
 

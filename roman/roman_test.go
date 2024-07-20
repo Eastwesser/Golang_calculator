@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// TestRomanToNumeral тестирует функцию RomanToNumeral, чтобы проверить, является ли строка допустимым римским числом.
+// TestRomanToNumeral тестирует функцию RomanToNumeral, чтобы проверить, является ли строка допустимым римским числом
 func TestRomanToNumeral(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -28,7 +28,7 @@ func TestRomanToNumeral(t *testing.T) {
 	}
 }
 
-// TestRomanToArabic тестирует функцию RomanToArabic, чтобы преобразовать римские числа в арабские числа.
+// TestRomanToArabic тестирует функцию RomanToArabic, чтобы преобразовать римские числа в арабские числа
 func TestRomanToArabic(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -42,7 +42,7 @@ func TestRomanToArabic(t *testing.T) {
 		{"XX", 20},
 		{"XLII", 42},
 		{"MCMXCIV", 1994},
-		{"INVALID", 0}, // Предполагается, что INVALID возвращает 0 в вашей реализации.
+		{"INVALID", 0}, // Предполагается, что INVALID возвращает 0
 	}
 
 	for _, test := range tests {
@@ -53,7 +53,7 @@ func TestRomanToArabic(t *testing.T) {
 	}
 }
 
-// TestArabicToRoman тестирует функцию ArabicToRoman, чтобы преобразовать арабские числа в римские числа.
+// TestArabicToRoman тестирует функцию ArabicToRoman, чтобы преобразовать арабские числа в римские числа
 func TestArabicToRoman(t *testing.T) {
 	tests := []struct {
 		input    int
@@ -77,7 +77,7 @@ func TestArabicToRoman(t *testing.T) {
 	}
 }
 
-// TestArabicToRomanComplex тестирует функцию ArabicToRoman с более сложными числами.
+// TestArabicToRomanComplex тестирует функцию ArabicToRoman с более сложными числами
 func TestArabicToRomanComplex(t *testing.T) {
 	tests := []struct {
 		input    int
