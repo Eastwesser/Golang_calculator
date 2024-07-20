@@ -9,12 +9,12 @@ import (
 	"GolangCalculator/roman"
 )
 
-// Регулярное выражение для проверки римских чисел
-var romanRegex = regexp.MustCompile(`^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$`)
+// Регулярное выражение для проверки римских чисел (до 100)
+var romanRegex = regexp.MustCompile(`^(C|XC|L?X{0,9}|IX|V?I{0,3})$`)
 
 // CalculateExpression вычисляет выражение, заданное в строковом формате
-func CalculateExpression(input string) string {
-	// Разделяем строку на компоненты
+func CalculateExpression(input string) (string, error) {
+	// Разделяем строку на компоненты, разделяя строку по пробелам
 	tokens := strings.Fields(input)
 
 	// Проверяем корректность формата
@@ -22,7 +22,7 @@ func CalculateExpression(input string) string {
 		panic("формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *)")
 	}
 
-	// Получаем первый операнд, оператор и второй операнд
+	// Получаем первый операнд, оператор и второй операнд, разбитые по пробелам
 	number1, operator, number2 := tokens[0], tokens[1], tokens[2]
 
 	// Проверяем, являются ли оба операнда римскими числами
