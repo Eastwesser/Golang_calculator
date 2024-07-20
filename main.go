@@ -5,7 +5,9 @@ import (
 	"fmt"
 )
 
+// Основная функция для запуска калькулятора
 func main() {
+	var phrase = "Благодарим за использование нашего калькулятора! ^w^"
 	calculator.MainCalc()
-	fmt.Println("Thank you for using our Golang Calculator! ^w^")
+	fmt.Println(phrase)
 }

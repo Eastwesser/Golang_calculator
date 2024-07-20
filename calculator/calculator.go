@@ -2,43 +2,30 @@ package calculator
 
 import (
 	"GolangCalculator/roman"
-	"bufio"
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
 
+// MainCalc обрабатывает основную логику калькулятора и взаимодействие с пользователем
 func MainCalc() {
-	reader := bufio.NewReader(os.Stdin)
-
 	for {
-		fmt.Println("Enter the first number (or type 'exit' to quit):")
-		number1, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Error reading input:", err)
-			continue
-		}
+		var number1, number2, operator string
+
+		fmt.Println("Введите первое число (или введите 'exit' для выхода):")
+		fmt.Scanln(&number1)
 		number1 = strings.TrimSpace(number1)
 		if strings.ToLower(number1) == "exit" {
 			break
 		}
 
-		fmt.Println("Enter the second number:")
-		number2, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Error reading input:", err)
-			continue
-		}
+		fmt.Println("Введите второе число:")
+		fmt.Scanln(&number2)
 		number2 = strings.TrimSpace(number2)
 
-		fmt.Println("Enter the operation (+, -, *, /):")
-		operator, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Error reading input:", err)
-			continue
-		}
+		fmt.Println("Введите операцию (+, -, *, /):")
+		fmt.Scanln(&operator)
 		operator = strings.TrimSpace(operator)
 
 		isRoman := roman.RomanToNumeral(number1)
@@ -46,39 +33,40 @@ func MainCalc() {
 
 		if isRoman {
 			if !roman.RomanToNumeral(number2) {
-				fmt.Println("Error: Both numbers must be Roman numerals or Arabic numerals")
+				fmt.Println("Ошибка: оба числа должны быть римскими или арабскими числами")
 				continue
 			}
-			num1 = roman.RomanToArabic(number1)
-			num2 = roman.RomanToArabic(number2)
+			num1, _ = roman.RomanToArabic(number1)
+			num2, _ = roman.RomanToArabic(number2)
 		} else {
 			var err1, err2 error
 			num1, err1 = strconv.Atoi(number1)
 			num2, err2 = strconv.Atoi(number2)
 			if err1 != nil || err2 != nil {
-				fmt.Println("Error: Both numbers must be valid integers")
+				fmt.Println("Ошибка: оба числа должны быть допустимыми целыми числами")
 				continue
 			}
 		}
 
 		result, err := calculate(num1, num2, operator)
 		if err != nil {
-			fmt.Println("Error:", err)
+			fmt.Println("Ошибка:", err)
 			continue
 		}
 
 		if isRoman {
 			if result < 1 {
-				fmt.Println("Error: Result in Roman numerals is less than I")
+				fmt.Println("Ошибка: Результат в римских числах меньше I")
 				continue
 			}
-			fmt.Println("Result:", roman.ArabicToRoman(result))
+			fmt.Println("Результат:", roman.ArabicToRoman(result))
 		} else {
-			fmt.Println("Result:", result)
+			fmt.Println("Результат:", result)
 		}
 	}
 }
 
+// calculate выполняет указанную арифметическую операцию над двумя целыми числами
 func calculate(x int, y int, operator string) (int, error) {
 	switch operator {
 	case "+":
@@ -89,26 +77,30 @@ func calculate(x int, y int, operator string) (int, error) {
 		return multiply(x, y), nil
 	case "/":
 		if y == 0 {
-			return 0, errors.New("division by zero")
+			return 0, errors.New("деление на ноль")
 		}
 		return divide(x, y), nil
 	default:
-		return 0, errors.New("unrecognized operator")
+		return 0, errors.New("неизвестный оператор")
 	}
 }
 
+// add возвращает сумму x и y
 func add(x int, y int) int {
 	return x + y
 }
 
+// subtract возвращает разность между x и y
 func subtract(x int, y int) int {
 	return x - y
 }
 
+// multiply возвращает произведение x и y
 func multiply(x int, y int) int {
 	return x * y
 }
 
+// divide возвращает частное от деления x на y
 func divide(x int, y int) int {
 	return x / y
 }
