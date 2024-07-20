@@ -7,9 +7,9 @@ import (
 // TestCalculateExpression тестирует функцию CalculateExpression для различных математических выражений
 func TestCalculateExpression(t *testing.T) {
 	tests := []struct {
-		input    string
-		expected string
-		isError  bool
+		input       string
+		expected    string
+		expectPanic bool
 	}{
 		{"3 + 7", "10", false},
 		{"10 - 4", "6", false},
@@ -25,14 +25,28 @@ func TestCalculateExpression(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result, err := CalculateExpression(test.input)
-		if test.isError {
-			if err == nil {
-				t.Errorf("CalculateExpression(%q) expected error; got result %s", test.input, result)
+		// Перехватываем панику
+		defer func() {
+			if r := recover(); r != nil {
+				if !test.expectPanic {
+					t.Errorf("CalculateExpression(%q) panicked with %v; did not expect panic", test.input, r)
+				}
 			}
+		}()
+
+		if test.expectPanic {
+			func() {
+				defer func() {
+					if r := recover(); r == nil {
+						t.Errorf("CalculateExpression(%q) did not panic; expected panic", test.input)
+					}
+				}()
+				CalculateExpression(test.input)
+			}()
 		} else {
-			if err != nil || result != test.expected {
-				t.Errorf("CalculateExpression(%q) = %s, %v; want %s, nil", test.input, result, err, test.expected)
+			result := CalculateExpression(test.input)
+			if result != test.expected {
+				t.Errorf("CalculateExpression(%q) = %s; want %s", test.input, result, test.expected)
 			}
 		}
 	}
