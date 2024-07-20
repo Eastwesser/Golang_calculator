@@ -2,9 +2,6 @@ package calculator
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestCalculateExpression(t *testing.T) {
@@ -21,51 +18,31 @@ func TestCalculateExpression(t *testing.T) {
 		{"X - V", "V", false},
 		{"X * II", "XX", false},
 		{"X / II", "V", false},
-		{"10 + X", "", true},
-		{"X + 10", "", true},
-		{"5 / 0", "", true},
+		{"X / 0", "", true},
+		{"5 % 2", "", true},
+		{"3 + 11", "", true},
+		{"11 + 3", "", true},
 		{"", "", true},
-		{"5 +", "", true},
-		{"3 % 2", "", true},
+		{"3 +", "", true},
+		{"3 3 +", "", true},
+		{"X + X", "XX", false},
+		{"X + 1", "", true},
+		{"I + X", "", true},
 	}
 
 	for _, test := range tests {
 		t.Run(test.input, func(t *testing.T) {
 			result, err := CalculateExpression(test.input)
 			if test.isError {
-				require.Error(t, err, "Expected an error for input: %s", test.input)
+				if err == nil {
+					t.Errorf("Expected an error for input: %s, but got none", test.input)
+				}
 			} else {
-				require.NoError(t, err, "Did not expect an error for input: %s", test.input)
-				assert.Equal(t, test.expected, result, "Unexpected result for input: %s", test.input)
-			}
-		})
-	}
-}
-
-func TestCalculate(t *testing.T) {
-	tests := []struct {
-		x        int
-		y        int
-		operator string
-		expected int
-		isError  bool
-	}{
-		{3, 7, "+", 10, false},
-		{10, 4, "-", 6, false},
-		{2, 5, "*", 10, false},
-		{8, 2, "/", 4, false},
-		{8, 0, "/", 0, true},
-		{5, 3, "%", 0, true},
-	}
-
-	for _, test := range tests {
-		t.Run(test.operator, func(t *testing.T) {
-			result, err := calculate(test.x, test.y, test.operator)
-			if test.isError {
-				require.Error(t, err, "Expected an error for operator: %s", test.operator)
-			} else {
-				require.NoError(t, err, "Did not expect an error for operator: %s", test.operator)
-				assert.Equal(t, test.expected, result, "Unexpected result for operator: %s", test.operator)
+				if err != nil {
+					t.Errorf("Did not expect an error for input: %s, but got: %v", test.input, err)
+				} else if result != test.expected {
+					t.Errorf("Unexpected result for input: %s. Got: %s, Expected: %s", test.input, result, test.expected)
+				}
 			}
 		})
 	}

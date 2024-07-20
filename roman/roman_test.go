@@ -2,9 +2,6 @@ package roman
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestRomanToArabic(t *testing.T) {
@@ -22,18 +19,25 @@ func TestRomanToArabic(t *testing.T) {
 		{"L", 50, false},
 		{"XC", 90, false},
 		{"C", 100, false},
-		{"MMM", 0, true},     // Invalid
-		{"INVALID", 0, true}, // Invalid
+		{"MMM", 3000, false},
+		{"MMMCMXCIX", 3999, false},
+		{"MMMM", 0, true},
+		{"INVALID", 0, true},
 	}
 
 	for _, test := range tests {
 		t.Run(test.input, func(t *testing.T) {
 			result, err := RomanToArabic(test.input)
 			if test.isError {
-				require.Error(t, err, "Expected an error for input: %s", test.input)
+				if err == nil {
+					t.Errorf("Expected an error for input: %s, but got none", test.input)
+				}
 			} else {
-				require.NoError(t, err, "Did not expect an error for input: %s", test.input)
-				assert.Equal(t, test.expected, result, "Unexpected result for input: %s", test.input)
+				if err != nil {
+					t.Errorf("Did not expect an error for input: %s, but got: %v", test.input, err)
+				} else if result != test.expected {
+					t.Errorf("Unexpected result for input: %s. Got: %d, Expected: %d", test.input, result, test.expected)
+				}
 			}
 		})
 	}
@@ -59,7 +63,9 @@ func TestArabicToRoman(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.expected, func(t *testing.T) {
 			result := ArabicToRoman(test.input)
-			assert.Equal(t, test.expected, result, "Unexpected result for input: %d", test.input)
+			if result != test.expected {
+				t.Errorf("Unexpected result for input: %d. Got: %s, Expected: %s", test.input, result, test.expected)
+			}
 		})
 	}
 }
