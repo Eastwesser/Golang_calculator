@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestIsRomanNumeral(t *testing.T) {
+func TestRomanToNumeral(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected bool
@@ -18,7 +18,7 @@ func TestIsRomanNumeral(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := IsRomanNumeral(test.input)
+		result := RomanToNumeral(test.input)
 		if result != test.expected {
 			t.Errorf("Expected %v, got %v for input %s", test.expected, result, test.input)
 		}

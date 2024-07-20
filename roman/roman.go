@@ -13,7 +13,7 @@ var arabicToRoman = []string{
 	"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
 }
 
-func IsRomanNumeral(num string) bool {
+func RomanToNumeral(num string) bool {
 	_, exists := romanNumerals[num]
 	return exists
 }

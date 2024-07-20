@@ -2,96 +2,98 @@ package calculator
 
 import (
 	"GolangCalculator/roman"
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
-	"sync"
 )
 
 func MainCalc() {
-	fmt.Println("Enter your calculation:")
-	var input string
-	fmt.Scanln(&input)
+	reader := bufio.NewReader(os.Stdin)
 
-	number1, number2, operator, err := parseInput(input)
-	if err != nil {
-		panic(err)
-	}
+	for {
+		fmt.Println("Enter the first number (or type 'exit' to quit):")
+		number1, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
+		number1 = strings.TrimSpace(number1)
+		if strings.ToLower(number1) == "exit" {
+			break
+		}
 
-	isRoman := roman.IsRomanNumeral(number1)
-	if isRoman != roman.IsRomanNumeral(number2) {
-		panic("different numeral systems used")
-	}
+		fmt.Println("Enter the second number:")
+		number2, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
+		number2 = strings.TrimSpace(number2)
 
-	var num1, num2 int
-	if isRoman {
-		num1 = roman.RomanToArabic(number1)
-		num2 = roman.RomanToArabic(number2)
-	} else {
-		num1, _ = strconv.Atoi(number1)
-		num2, _ = strconv.Atoi(number2)
-	}
+		fmt.Println("Enter the operation (+, -, *, /):")
+		operator, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
+		operator = strings.TrimSpace(operator)
 
-	if num1 < 1 || num1 > 10 || num2 < 1 || num2 > 10 {
-		panic("numbers must be between 1 and 10")
-	}
+		isRoman := roman.RomanToNumeral(number1)
+		var num1, num2 int
 
-	var wg sync.WaitGroup
-	resultChan := make(chan int)
-	errorChan := make(chan error)
+		if isRoman {
+			if !roman.RomanToNumeral(number2) {
+				fmt.Println("Error: Both numbers must be Roman numerals or Arabic numerals")
+				continue
+			}
+			num1 = roman.RomanToArabic(number1)
+			num2 = roman.RomanToArabic(number2)
+		} else {
+			var err1, err2 error
+			num1, err1 = strconv.Atoi(number1)
+			num2, err2 = strconv.Atoi(number2)
+			if err1 != nil || err2 != nil {
+				fmt.Println("Error: Both numbers must be valid integers")
+				continue
+			}
+		}
 
-	wg.Add(1)
-	go calculate(num1, num2, operator, resultChan, errorChan, &wg)
+		result, err := calculate(num1, num2, operator)
+		if err != nil {
+			fmt.Println("Error:", err)
+			continue
+		}
 
-	go func() {
-		wg.Wait()
-		close(resultChan)
-		close(errorChan)
-	}()
-
-	select {
-	case result := <-resultChan:
 		if isRoman {
 			if result < 1 {
-				panic("Result in Roman numerals is less than I")
+				fmt.Println("Error: Result in Roman numerals is less than I")
+				continue
 			}
 			fmt.Println("Result:", roman.ArabicToRoman(result))
 		} else {
 			fmt.Println("Result:", result)
 		}
-	case err := <-errorChan:
-		panic(err)
 	}
 }
 
-func parseInput(input string) (string, string, string, error) {
-	input = strings.TrimSpace(input)
-	parts := strings.Split(input, " ")
-	if len(parts) != 3 {
-		return "", "", "", errors.New("invalid format")
-	}
-	return parts[0], parts[2], parts[1], nil
-}
-
-func calculate(x int, y int, operator string, resultChan chan int, errorChan chan error, wg *sync.WaitGroup) {
-	defer wg.Done()
-
+func calculate(x int, y int, operator string) (int, error) {
 	switch operator {
 	case "+":
-		resultChan <- add(x, y)
+		return add(x, y), nil
 	case "-":
-		resultChan <- subtract(x, y)
+		return subtract(x, y), nil
 	case "*":
-		resultChan <- multiply(x, y)
+		return multiply(x, y), nil
 	case "/":
 		if y == 0 {
-			errorChan <- errors.New("division by zero")
-			return
+			return 0, errors.New("division by zero")
 		}
-		resultChan <- divide(x, y)
+		return divide(x, y), nil
 	default:
-		errorChan <- errors.New("unrecognized operator")
+		return 0, errors.New("unrecognized operator")
 	}
 }
 
