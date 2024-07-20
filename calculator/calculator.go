@@ -1,53 +1,96 @@
 package calculator
 
 import (
+	"GolangCalculator/roman"
 	"errors"
 	"fmt"
+	"strconv"
+	"strings"
+	"sync"
 )
 
-/*
-Per meliora
-ad astra
-et altiora!
-*/
-
 func MainCalc() {
-	fmt.Println("Enter first number: ")
-	var number1 int
-	fmt.Scanln(&number1)
+	fmt.Println("Enter your calculation:")
+	var input string
+	fmt.Scanln(&input)
 
-	fmt.Println("Enter second number: ")
-	var number2 int
-	fmt.Scanln(&number2)
+	number1, number2, operator, err := parseInput(input)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
-	fmt.Println("Choose your math option:")
-	fmt.Println("A. Sum")
-	fmt.Println("B. Subtraction")
-	fmt.Println("C. Multiplication")
-	fmt.Println("D. Division")
+	isRoman := roman.IsRomanNumeral(number1)
+	var num1, num2 int
 
-	var choice string
-	fmt.Scanln(&choice)
+	if isRoman {
+		num1 = roman.RomanToArabic(number1)
+		num2 = roman.RomanToArabic(number2)
+	} else {
+		num1, _ = strconv.Atoi(number1)
+		num2, _ = strconv.Atoi(number2)
+	}
 
-	switch choice {
-	case "A":
-		fmt.Println("Result:", add(number1, number2))
-	case "B":
-		fmt.Println("Result:", subtract(number1, number2))
-	case "C":
-		fmt.Println("Result:", multiply(number1, number2))
+	var wg sync.WaitGroup
+	resultChan := make(chan int)
+	errorChan := make(chan error)
 
-	case "D":
-		res, err := divide(number1, number2)
-		if err != nil { // check for error
+	wg.Add(1)
+	go calculate(num1, num2, operator, resultChan, errorChan, &wg)
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+		close(errorChan)
+	}()
+
+	for {
+		select {
+		case result := <-resultChan:
+			if isRoman {
+				if result < 1 {
+					fmt.Println("Error: Result in Roman numerals is less than I")
+					return
+				}
+				fmt.Println("Result:", roman.ArabicToRoman(result))
+			} else {
+				fmt.Println("Result:", result)
+			}
+			return
+		case err := <-errorChan:
 			fmt.Println("Error:", err)
-			break
-		} else {
-			fmt.Println("Result:", res)
+			return
 		}
+	}
+}
 
+func parseInput(input string) (string, string, string, error) {
+	input = strings.TrimSpace(input)
+	parts := strings.Split(input, " ")
+	if len(parts) != 3 {
+		return "", "", "", errors.New("invalid format")
+	}
+	return parts[0], parts[2], parts[1], nil
+}
+
+func calculate(x int, y int, operator string, resultChan chan int, errorChan chan error, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	switch operator {
+	case "+":
+		resultChan <- add(x, y)
+	case "-":
+		resultChan <- subtract(x, y)
+	case "*":
+		resultChan <- multiply(x, y)
+	case "/":
+		if y == 0 {
+			errorChan <- errors.New("division by zero")
+			return
+		}
+		resultChan <- divide(x, y)
 	default:
-		fmt.Println("Unrecognized choice")
+		errorChan <- errors.New("unrecognized operator")
 	}
 }
 
@@ -63,9 +106,6 @@ func multiply(x int, y int) int {
 	return x * y
 }
 
-func divide(x int, y int) (int, error) {
-	if y == 0 {
-		return 0, errors.New("Division by zero")
-	}
-	return x / y, nil
+func divide(x int, y int) int {
+	return x / y
 }
