@@ -51,6 +51,9 @@ func RomanToArabic(num string) (int, error) {
 
 // ArabicToRoman преобразует арабское число в его римский эквивалент
 func ArabicToRoman(num int) string {
+	if num < 1 || num > 100 {
+		return "" // Handle numbers outside the Roman numeral range
+	}
 	var result strings.Builder
 
 	/*

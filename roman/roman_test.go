@@ -6,38 +6,39 @@ import (
 
 func TestRomanToArabic(t *testing.T) {
 	tests := []struct {
-		input    string
-		expected int
-		isError  bool
+		name        string
+		input       string
+		expected    int
+		expectError bool
 	}{
-		{"I", 1, false},
-		{"IV", 4, false},
-		{"V", 5, false},
-		{"IX", 9, false},
-		{"X", 10, false},
-		{"XL", 40, false},
-		{"L", 50, false},
-		{"XC", 90, false},
-		{"C", 100, false},
-		{"MMM", 3000, false},
-		{"MMMCMXCIX", 3999, false},
-		{"MMMM", 0, true},
-		{"INVALID", 0, true},
+		// Корректные случаи
+		{"I", "I", 1, false},
+		{"IV", "IV", 4, false},
+		{"V", "V", 5, false},
+		{"IX", "IX", 9, false},
+		{"X", "X", 10, false},
+		{"XL", "XL", 40, false},
+		{"L", "L", 50, false},
+		{"XC", "XC", 90, false},
+		{"C", "C", 100, false},
+
+		// Ошибочные случаи
+		{"Invalid", "A", 0, true},              // Некорректное римское число
+		{"Invalid combination", "IC", 0, true}, // Неправильная комбинация символов
+		{"Empty string", "", 0, true},          // Пустая строка
+		{"Invalid sequence", "XXXX", 0, true},  // Неправильная последовательность римских чисел
+		{"Invalid format", "VV", 0, true},      // Повторяющиеся символы
 	}
 
-	for _, test := range tests {
-		t.Run(test.input, func(t *testing.T) {
-			result, err := RomanToArabic(test.input)
-			if test.isError {
-				if err == nil {
-					t.Errorf("Expected an error for input: %s, but got none", test.input)
-				}
-			} else {
-				if err != nil {
-					t.Errorf("Did not expect an error for input: %s, but got: %v", test.input, err)
-				} else if result != test.expected {
-					t.Errorf("Unexpected result for input: %s. Got: %d, Expected: %d", test.input, result, test.expected)
-				}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := RomanToArabic(tt.input)
+			if (err != nil) != tt.expectError {
+				t.Errorf("RomanToArabic() error = %v, expectError %v", err, tt.expectError)
+				return
+			}
+			if result != tt.expected {
+				t.Errorf("RomanToArabic() = %v, expected %v", result, tt.expected)
 			}
 		})
 	}
@@ -45,26 +46,37 @@ func TestRomanToArabic(t *testing.T) {
 
 func TestArabicToRoman(t *testing.T) {
 	tests := []struct {
-		input    int
-		expected string
+		name        string
+		input       int
+		expected    string
+		expectError bool
 	}{
-		{1, "I"},
-		{4, "IV"},
-		{5, "V"},
-		{9, "IX"},
-		{10, "X"},
-		{40, "XL"},
-		{50, "L"},
-		{90, "XC"},
-		{100, "C"},
-		{3999, "MMMCMXCIX"},
+		// Корректные случаи
+		{"1", 1, "I", false},
+		{"4", 4, "IV", false},
+		{"5", 5, "V", false},
+		{"9", 9, "IX", false},
+		{"10", 10, "X", false},
+		{"40", 40, "XL", false},
+		{"50", 50, "L", false},
+		{"90", 90, "XC", false},
+		{"100", 100, "C", false},
+
+		// Ошибочные случаи
+		{"Below range", 0, "", true},      // Неправильное значение (меньше 1)
+		{"Above range", 101, "", true},    // Неправильное значение (больше 100)
+		{"Negative number", -5, "", true}, // Неправильное значение (отрицательное число)
 	}
 
-	for _, test := range tests {
-		t.Run(test.expected, func(t *testing.T) {
-			result := ArabicToRoman(test.input)
-			if result != test.expected {
-				t.Errorf("Unexpected result for input: %d. Got: %s, Expected: %s", test.input, result, test.expected)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := ArabicToRoman(tt.input)
+			if (result == "" && !tt.expectError) || (result != "" && tt.expectError) {
+				t.Errorf("ArabicToRoman() = %v, expectError %v", result, tt.expectError)
+				return
+			}
+			if result != tt.expected {
+				t.Errorf("ArabicToRoman() = %v, expected %v", result, tt.expected)
 			}
 		})
 	}
