@@ -6,22 +6,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// Тестируем функцию CalculateExpression
 func TestCalculateExpression(t *testing.T) {
+	// Определяем набор тестовых случаев
 	testCases := []struct {
-		name  string
-		input string
+		name  string // Название теста
+		input string // Входные данные для теста
 	}{
-		{"Invalid operation (divide by zero)", "10 / 0"},
-		{"Invalid input format (out of range)", "11 + 1"},
-		{"Mixed numeral systems", "IX + 5"},
-		{"Negative result in Roman numeral system", "IV - V"},
-		{"Unsupported operation (**) with Arabic numerals", "2 ** 2"},
-		{"Incomplete expression", "2 +"},
+		{"Недопустимая операция (деление на ноль)", "10 / 0"},            // Тест на деление на ноль
+		{"Недопустимый формат ввода (выход за пределы)", "11 + 1"},       // Тест на выход за пределы допустимых значений
+		{"Смешанные системы счисления", "IX + 5"},                        // Тест на смешение римских и арабских чисел
+		{"Отрицательный результат в римской системе", "IV - V"},          // Тест на отрицательный результат при работе с римскими числами
+		{"Неподдерживаемая операция (**) с арабскими числами", "2 ** 2"}, // Тест на неподдерживаемую операцию
+		{"Неполное выражение", "2 +"},                                    // Тест на неполное выражение
 	}
 
+	// Запускаем каждый тестовый случай
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			require.Panics(t, func() { CalculateExpression(tc.input) }, "Expected panic for input: %s", tc.input)
+			// Проверяем, что функция вызывает панику для недопустимого ввода
+			require.Panics(t, func() { CalculateExpression(tc.input) }, "Ожидалась паника для ввода: %s", tc.input)
 		})
 	}
 }
