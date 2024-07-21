@@ -39,8 +39,6 @@ func RomanToArabic(num string) (int, error) {
 		value, exists := romanNumerals[char]
 		if !exists {
 			panic("недопустимое римское число")
-			// Раскомментить return для тестов!
-			//return 0, errors.New("недопустимое римское число")
 		}
 		// Проверка на повторение символов
 		if char == lastChar {

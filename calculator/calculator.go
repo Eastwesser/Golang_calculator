@@ -19,8 +19,6 @@ func CalculateExpression(input string) (string, error) {
 	// Проверяем корректность формата
 	if len(tokens) != 3 {
 		panic("формат не удовлетворяет заданию — два операнда и один оператор через пробелы! (+, -, /, *)")
-		// Раскомментить return для тестов!
-		//return "", errors.New("формат не удовлетворяет заданию — два операнда и один оператор через пробелы! (+, -, /, *)")
 	}
 
 	// Получаем первый операнд, оператор и второй операнд, разбитые по пробелам
@@ -34,8 +32,6 @@ func CalculateExpression(input string) (string, error) {
 	// Проверяем, чтобы оба числа были в одной системе счисления
 	if (isRoman1 && !isRoman2) || (!isRoman1 && isRoman2) {
 		panic("используются одновременно разные системы счисления")
-		// Раскомментить return для тестов!
-		//return "", errors.New("используются одновременно разные системы счисления")
 	}
 
 	var num1, num2 int
@@ -112,7 +108,5 @@ func calculate(x int, y int, operator string) (int, error) {
 		return x / y, nil
 	default:
 		panic("неизвестный оператор")
-		// Раскомментить return для тестов!
-		//return 0, errors.New("неизвестный оператор")
 	}
 }
