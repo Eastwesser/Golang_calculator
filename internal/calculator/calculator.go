@@ -1,11 +1,10 @@
 package calculator
 
 import (
+	"GolangCalculator/internal/roman"
 	"regexp"
 	"strconv"
 	"strings"
-
-	"GolangCalculator/roman"
 )
 
 // Регулярное выражение для проверки римских чисел

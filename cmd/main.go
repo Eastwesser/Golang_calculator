@@ -1,12 +1,11 @@
 package main
 
 import (
+	"GolangCalculator/internal/calculator"
 	"bufio"
 	"fmt"
 	"os"
 	"strings"
-
-	"GolangCalculator/calculator"
 )
 
 func main() {
