@@ -6,35 +6,43 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// Тестируем функцию RomanToArabic
 func TestRomanToArabic(t *testing.T) {
+	// Определяем набор тестовых случаев
 	testCases := []struct {
-		name  string
-		input string
+		name  string // Название теста
+		input string // Входные данные для теста
 	}{
-		{"Invalid Roman numeral with unknown characters", "IIII"},
-		{"Invalid Roman numeral with repeated characters", "VV"},
-		{"Roman numeral out of range", "XI"},
+		{"Недопустимое римское число с неизвестными символами", "IIII"}, // Тест на недопустимое римское число
+		{"Недопустимое римское число с повторяющимися символами", "VV"}, // Тест на недопустимое римское число с повторениями
+		{"Римское число вне диапазона", "XI"},                           // Тест на выход римского числа за пределы допустимого диапазона
 	}
 
+	// Запускаем каждый тестовый случай
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			require.Panics(t, func() { RomanToArabic(tc.input) }, "Expected panic for input: %s", tc.input)
+			// Проверяем, что функция вызывает панику для недопустимого ввода
+			require.Panics(t, func() { RomanToArabic(tc.input) }, "Ожидалась паника для ввода: %s", tc.input)
 		})
 	}
 }
 
+// Тестируем функцию ArabicToRoman
 func TestArabicToRoman(t *testing.T) {
+	// Определяем набор тестовых случаев
 	testCases := []struct {
-		name  string
-		input int
+		name  string // Название теста
+		input int    // Входные данные для теста
 	}{
-		{"Arabic number out of range (0)", 0},
-		{"Arabic number out of range (101)", 101},
+		{"Арабское число вне диапазона (0)", 0},     // Тест на число 0
+		{"Арабское число вне диапазона (101)", 101}, // Тест на число 101
 	}
 
+	// Запускаем каждый тестовый случай
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			require.Panics(t, func() { ArabicToRoman(tc.input) }, "Expected panic for input: %d", tc.input)
+			// Проверяем, что функция вызывает панику для недопустимого ввода
+			require.Panics(t, func() { ArabicToRoman(tc.input) }, "Ожидалась паника для ввода: %d", tc.input)
 		})
 	}
 }
