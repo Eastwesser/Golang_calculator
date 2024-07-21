@@ -31,28 +31,59 @@ func RomanToArabic(num string) (int, error) {
 	num = strings.ToUpper(num) // Преобразуем строку в верхний регистр
 	total := 0
 	prevValue := 0
+	repeatCount := 0
+	lastChar := ""
 
 	// Перебираем строку с конца, добавляем или вычитаем значение в зависимости от положения символа
 	for i := len(num) - 1; i >= 0; i-- { // Здесь итерация идет по байтам (не рунам)
-		value, exists := romanNumerals[string(num[i])]
+		char := string(num[i])
+		value, exists := romanNumerals[char]
 		if !exists {
+			//panic("недопустимое римское число")
+			// Раскомментить return для тестов!
 			return 0, errors.New("недопустимое римское число")
 		}
+		// Проверка на повторение символов
+		if char == lastChar {
+			repeatCount++
+			if repeatCount > 2 && (char == "I" || char == "X" || char == "C") {
+				//panic("недопустимое римское число")
+				// Раскомментить return для тестов!
+				return 0, errors.New("недопустимое римское число")
+			}
+			if repeatCount > 0 && (char == "V" || char == "L" || char == "D") {
+				//panic("недопустимое римское число")
+				// Раскомментить return для тестов!
+				return 0, errors.New("недопустимое римское число")
+			}
+		} else {
+			repeatCount = 0
+		}
+
 		if value < prevValue {
 			total -= value
 		} else {
 			total += value
 		}
 		prevValue = value
+		lastChar = char
+	}
+
+	if total < 1 || total > 10 {
+		//panic("римское число должно быть от 1 до 10 включительно")
+		// Раскомментить return для тестов!
+		return 0, errors.New("римское число должно быть от 1 до 10 включительно")
 	}
 
 	return total, nil
 }
 
 // ArabicToRoman преобразует арабское число в его римский эквивалент
-func ArabicToRoman(num int) string {
+func ArabicToRoman(num int) (string, error) {
 	if num < 1 || num > 100 {
-		return "" // Handle numbers outside the Roman numeral range
+		//panic("число должно быть в диапазоне от 1 до 100")
+		// Раскомментить return для тестов!
+		return "", errors.New("число должно быть в диапазоне от 1 до 100")
 	}
 	var result strings.Builder
 
@@ -72,5 +103,5 @@ func ArabicToRoman(num int) string {
 		}
 	}
 
-	return result.String()
+	return result.String(), nil
 }

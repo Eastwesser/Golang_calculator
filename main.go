@@ -13,11 +13,11 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	// Обработка паники
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Ошибка:", r)
-		}
-	}()
+	//defer func() {
+	//	if r := recover(); r != nil {
+	//		fmt.Println("Ошибка:", r)
+	//	}
+	//}()
 
 	for {
 		fmt.Println("Введите выражение (или введите 'exit' для выхода):")
