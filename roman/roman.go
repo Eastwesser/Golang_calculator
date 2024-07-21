@@ -1,7 +1,6 @@
 package roman
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -39,22 +38,22 @@ func RomanToArabic(num string) (int, error) {
 		char := string(num[i])
 		value, exists := romanNumerals[char]
 		if !exists {
-			//panic("недопустимое римское число")
+			panic("недопустимое римское число")
 			// Раскомментить return для тестов!
-			return 0, errors.New("недопустимое римское число")
+			//return 0, errors.New("недопустимое римское число")
 		}
 		// Проверка на повторение символов
 		if char == lastChar {
 			repeatCount++
 			if repeatCount > 2 && (char == "I" || char == "X" || char == "C") {
-				//panic("недопустимое римское число")
+				panic("недопустимое римское число")
 				// Раскомментить return для тестов!
-				return 0, errors.New("недопустимое римское число")
+				//return 0, errors.New("недопустимое римское число")
 			}
 			if repeatCount > 0 && (char == "V" || char == "L" || char == "D") {
-				//panic("недопустимое римское число")
+				panic("недопустимое римское число")
 				// Раскомментить return для тестов!
-				return 0, errors.New("недопустимое римское число")
+				//return 0, errors.New("недопустимое римское число")
 			}
 		} else {
 			repeatCount = 0
@@ -70,9 +69,9 @@ func RomanToArabic(num string) (int, error) {
 	}
 
 	if total < 1 || total > 10 {
-		//panic("римское число должно быть от 1 до 10 включительно")
+		panic("римское число должно быть от 1 до 10 включительно")
 		// Раскомментить return для тестов!
-		return 0, errors.New("римское число должно быть от 1 до 10 включительно")
+		//return 0, errors.New("римское число должно быть от 1 до 10 включительно")
 	}
 
 	return total, nil
@@ -81,9 +80,9 @@ func RomanToArabic(num string) (int, error) {
 // ArabicToRoman преобразует арабское число в его римский эквивалент
 func ArabicToRoman(num int) (string, error) {
 	if num < 1 || num > 100 {
-		//panic("число должно быть в диапазоне от 1 до 100")
+		panic("число должно быть в диапазоне от 1 до 100")
 		// Раскомментить return для тестов!
-		return "", errors.New("число должно быть в диапазоне от 1 до 100")
+		//return "", errors.New("число должно быть в диапазоне от 1 до 100")
 	}
 	var result strings.Builder
 

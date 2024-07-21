@@ -13,19 +13,19 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	// Обработка паники
-	//defer func() {
-	//	if r := recover(); r != nil {
-	//		fmt.Println("Ошибка:", r)
-	//	}
-	//}()
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Ошибка:", r)
+		}
+	}()
 
 	for {
 		fmt.Println("Введите выражение (или введите 'exit' для выхода):")
-		input, _ := reader.ReadString('\n') // Читаем строку ('_' -> 'err' для обработки ошибок)
-		//if err != nil {
-		//	fmt.Println("Введите другое выражение в соответствии с инструкцией", err)
-		//	continue
-		//}
+		input, err := reader.ReadString('\n') // Читаем строку ('_' -> 'err' для обработки ошибок)
+		if err != nil {
+			fmt.Println("Введите другое выражение в соответствии с инструкцией", err)
+			continue
+		}
 		input = strings.TrimSpace(input) // Удаляем префиксные и постфиксные пробелы в начале и конце строки
 
 		if strings.ToLower(input) == "exit" {
